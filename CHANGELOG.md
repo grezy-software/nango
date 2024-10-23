@@ -1,3 +1,10 @@
+# 1.0.0 (2024-10-23)
+
+
+### Features
+
+* **init:** first commit ([582b26f](https://github.com/grezy-software/nango/commit/582b26f8bf2e60742ab88ab1f9d3f1c78e3c9e4e))
+
 # 1.0.0 (2024-10-22)
 
 
