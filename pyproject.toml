@@ -37,7 +37,7 @@ lint.ignore = [
 lint.fixable = ["ALL"]
 lint.unfixable = []
 
-# Exclude a variety of commonly ignored directories.
+# Exclude a variety of commonly ignored directories
 lint.exclude = [
     ".bzr",
     ".direnv",
