@@ -1,0 +1,46 @@
+from typing import ClassVar
+from django.db import models
+{% for import_line in imports %}
+{{- "\n" -}}{{- import_line -}}
+{% endfor %}
+from rest_framework import serializers
+
+
+class {{ model_name }}DetailNangoSerializer(serializers.ModelSerializer):
+    """."""
+
+    {% for specified_field in detail.specified_fields -%}
+    {{specified_field.name}} = {{specified_field.serializer}}(many={{specified_field.many}})
+    {% endfor -%}
+
+
+
+    class Meta:
+        model = {{ model_name }}
+        fields: ClassVar[list[str]] = [
+            {% for field_name in detail.field_names_list -%}
+            "{{ field_name }}",
+            {% endfor -%}
+        ]
+        read_only_fields: ClassVar[list[str]] = [
+        {% if "id" in detail.field_names_list -%}
+            "id",
+        {% endif -%}
+        ]
+        write_only_fields: ClassVar[list[str]] = []
+
+    def validate(self, data: dict) -> dict:
+        """Validate the data."""
+        return super().validate(data)
+
+    def create(self, validated_data: dict) -> None:
+        """Create a new {{ model_name }} instance."""
+        return {{ model_name}}.objects.create(**validated_data)
+
+    def update(self, instance: models.Model, validated_data: dict) -> None:
+        """Update the {{ model_name }} instance."""
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance
+

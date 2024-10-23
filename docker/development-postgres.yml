@@ -1,0 +1,141 @@
+name: nango_postgres
+
+x-django-common: &django-common
+  build: 
+      context: ..
+      dockerfile: ./docker/compose/development/django/Dockerfile
+  volumes:
+    - ../backend/:/app/:z
+  environment:
+    DB_ENGINE: postgres
+  env_file:
+    - ../backend/.envs/.development/.django
+    - ../backend/.envs/.development/.postgres
+
+volumes:
+  nango_postgres_dev_postgres_data:
+  nango_postgres_dev_postgres_data_backups:
+
+services:
+  nextjs:
+    build:
+      context: ..
+      dockerfile: ./docker/compose/development/nextjs/Dockerfile
+    container_name: nango_dev_nextjs
+    depends_on:
+      postgres: 
+        condition: service_started
+      redis:
+        condition: service_started
+    volumes:
+      - ../frontend/:/app/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nango_dev_nextjs.rule=Host(`localhost`)"
+      - "traefik.http.routers.nango_dev_nextjs.entrypoints=frontend"
+    expose:
+      - "3000"
+
+  postgres:
+    image: postgres:17
+    container_name: nango_dev_postgres
+    volumes:
+      - nango_postgres_dev_postgres_data:/var/lib/postgresql/data:Z
+      - nango_postgres_dev_postgres_data_backups:/backups:z
+    env_file:
+      - ../backend/.envs/.development/.postgres
+    ports:
+      - "5432:5432"
+
+  django: 
+    <<: *django-common
+    image: nango
+    container_name: nango_dev_django
+    depends_on:
+      postgres: 
+        condition: service_started
+      redis:
+        condition: service_started
+    command: /start.sh
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.django.rule=Host(`localhost`)"
+      - "traefik.http.routers.django.entrypoints=backend"
+    expose:
+      - "8000"
+
+  redis:
+    image: redis:6
+    container_name: nango_dev_redis
+
+  celeryworker:
+    <<: *django-common
+    container_name: nango_dev_celeryworker
+    user: celery
+    depends_on:
+      redis: 
+        condition: service_started
+      postgres: 
+        condition: service_started
+      django: 
+        condition: service_started
+    command: /start-celeryworker.sh
+    labels:
+      - "traefik.enable=false"
+
+  celerybeat:
+    <<: *django-common
+    container_name: nango_dev_celerybeat
+    depends_on:
+      redis: 
+        condition: service_started
+      postgres: 
+        condition: service_started
+      django: 
+        condition: service_started
+    command: /start-celerybeat.sh
+    labels:
+      - "traefik.enable=false"
+
+  flower:
+    <<: *django-common
+    container_name: nango_dev_flower
+    command: /start-flower.sh
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flower.rule=Host(`localhost`)"
+      - "traefik.http.routers.flower.entrypoints=flower"
+    expose:
+      - "5555"
+
+  mkdocs:
+    container_name: nango_mkdocs
+    build:
+      context: ..
+      dockerfile: ./docker/compose/docs/Dockerfile
+    volumes:
+      - ../docs:/app/docs/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nango_mkdocs.rule=Host(`localhost`)"
+      - "traefik.http.routers.nango_mkdocs.entrypoints=mkdocs"
+
+  traefik:
+    image: "traefik:v2.9.5"
+    container_name: nango_dev_traefik
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.frontend.address=:3000"
+      - "--entrypoints.flower.address=:5555"
+      - "--entrypoints.backend.address=:8000"
+      - "--entrypoints.mkdocs.address=:8005"
+    ports:
+      - "3000:3000"
+      - "5555:5555"
+      - "8000:8000"
+      - "8005:8005"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"

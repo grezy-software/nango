@@ -1,0 +1,16 @@
+-r ./docs.txt
+-r ./base.txt
+
+Werkzeug==3.0.4 # https://github.com/pallets/werkzeug
+ipdb==0.13.13  # https://github.com/gotcha/ipdb
+watchfiles==0.24.0  # https://github.com/samuelcolvin/watchfiles
+
+# Code quality
+# ------------------------------------------------------------------------------
+ruff==0.6.9
+pre-commit==4.0.1
+coverage==7.6.2 # https://github.com/nedbat/coveragepy
+
+# Django
+django-coverage-plugin==3.1.0  # https://github.com/nedbat/django_coverage_plugin
+django-extensions==3.2.3  # https://github.com/django-extensions/django-extensions

@@ -1,0 +1,20 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "dev"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/frontend/"
+    target-branch: "dev"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/backend/requirements/"
+    target-branch: "dev"
+    schedule:
+      interval: "daily"

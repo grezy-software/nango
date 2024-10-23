@@ -1,0 +1,101 @@
+name: nango_postgres
+
+volumes:
+  nango_postgres_data:
+  nango_postgres_data_backups:
+  traefik-letsencrypt:
+
+services:
+  nextjs:
+    build:
+      context: ..
+      dockerfile: ./docker/compose/production/nextjs/Dockerfile
+    image: nextjs
+    container_name: nango_nextjs
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: http://localhost
+    depends_on:
+      postgres: 
+        condition: service_healthy
+      redis:
+        condition: service_started
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nango_nextjs.rule=Host(`localhost`)"
+      - "traefik.http.routers.nango_nextjs.entrypoints=web"
+    expose:
+      - "3000"
+
+  django: 
+    build: 
+      context: ..
+      dockerfile: ./docker/compose/production/django/Dockerfile
+    environment:
+      DB_ENGINE: postgres
+    env_file:
+      - ../backend/.envs/.production/.django
+      - ../backend/.envs/.production/.postgres
+    image: nango
+    container_name: nango_django
+    depends_on:
+      postgres: 
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: /start.sh
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.django.rule=Host(`localhost`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.django.entrypoints=web"
+    expose:
+      - "8000"
+    healthcheck:
+      test: curl --fail --output /dev/null http://localhost:8000/health_check/ || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 60
+
+  postgres:
+    image: postgres:17
+    container_name: nango_postgres
+    volumes:
+      - nango_postgres_data:/var/lib/postgresql/data
+      - nango_postgres_data_backups:/backups
+    env_file:
+      - ../backend/.envs/.production/.postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d nango -U nango"]
+      timeout: 1s
+      interval: 2s
+      retries: 300
+
+
+  redis:
+    image: redis:6
+    container_name: nango_redis
+
+  traefik:
+    image: "traefik:v2.9.5"
+    container_name: traefik
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      # - "--entrypoints.websecure.address=:443"
+      # - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      # - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      # - "--certificatesresolvers.myresolver.acme.email=napse.invest@gmail.com"
+      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # - "--entrypoints.backend.address=:8000"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8000:8000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "traefik-letsencrypt:/letsencrypt"
+

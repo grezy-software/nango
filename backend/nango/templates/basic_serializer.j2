@@ -1,0 +1,21 @@
+from django.db import models
+
+{% for import_line in imports -%}
+{{ import_line }}
+{% endfor %}
+
+class {{ serializer_name }}({{ nango_serializer }}):
+    """Customizable serializer for {{ model_name }} serializer."""
+
+    def validate(self, data: dict) -> dict:
+        """Validate the data."""
+        return super().validate(data)
+
+    def create(self, validated_data: dict) -> None:
+        """Create a new {{ model_name }} instance."""
+        return {{ model_name}}.objects.create(**validated_data)
+
+    def update(self, instance: models.Model, validated_data: dict) -> None:
+        """Update the {{ model_name }} instance."""
+        return super().update(instance, validated_data)
+

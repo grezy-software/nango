@@ -1,0 +1,105 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+{% for import_line in imports -%}
+{{ import_line }}
+{% endfor -%}
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
+
+from .{{model_name_snake_case}}_detail_serializer import {{ model_name }}DetailSerializer
+from .{{model_name_snake_case}}_serializer import {{ model_name }}Serializer
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    {% if "from nango.models.user import User" not in imports -%}
+    from nango.models.user import User
+    {% endif -%}
+    from rest_framework.authentication import BaseAuthentication
+    from rest_framework.request import Request
+    from rest_framework.serializers import Serializer
+
+
+class {{ model_name }}View(GenericViewSet):
+    """."""
+
+    # permission_classes: ClassVar[list] = []   # noqa: ERA001
+    # authentication_classes: ClassVar[list] = []   # noqa: ERA001
+    serializer_class = {{ model_name }}Serializer
+
+    def get_permissions(self) -> list:
+        """Return permission for the action."""
+        return super().get_permissions()
+
+    def get_authenticators(self) -> BaseAuthentication:
+        """Return authenticators for the action."""
+        return super().get_authenticators()
+
+    def get_serializer_class(self) -> Serializer:
+        """Return the serializer for the action."""
+        match self.action:
+            case "list":
+                return {{ model_name }}Serializer
+            case "retrieve" | "update" | "partial_update":
+                return {{ model_name }}DetailSerializer
+            case _:
+                return super().get_serializer_class()
+
+    def get_user(self) -> User:
+        """Return the user for the action."""
+        return self.request.user
+
+    def get_queryset(self) -> QuerySet[{{ model_name }}]:
+        """Return the data for the action."""
+        raise NotImplementedError
+        return {{ model_name }}.objects.all()
+
+    def get_object(self) -> {{ model_name }}:
+        """Return the object for the action."""
+        raise NotImplementedError
+        return super().get_object()
+
+
+    def list(self, request: Request) -> Response:  # noqa: ARG002
+        """Return a list of {{ model_name }}.
+
+        For pagination, please look to rest_framework.mixins.ListModelMixin class.
+        """
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request: Request, pk: int) -> Response:  # noqa: ARG002
+        """Return a {{ model_name }} instance."""
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request: Request) -> Response:
+        """Create a new {{ model_name }} instance."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(self.get_serializer(serializer.instance).data, status=status.HTTP_201_CREATED)
+
+    def update(self, request: Request, pk: int) -> Response:  # noqa: ARG002
+        """Update a {{ model_name }} instance."""
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(self.get_serializer(serializer.instance).data, status=status.HTTP_200_OK)
+
+    def partial_update(self, request: Request, pk: int) -> Response:
+        """Partial update a {{ model_name }} instance."""
+        return self.update(request, pk)
+
+    def destroy(self, request: Request, pk: int) -> Response:  # noqa: ARG002
+        """Delete a {{ model_name }} instance."""
+        instance = self.get_object()
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

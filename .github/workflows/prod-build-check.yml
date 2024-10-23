@@ -1,0 +1,37 @@
+name: Prod Build Check
+
+on:
+  pull_request:
+
+jobs:
+  authorize:
+    environment: ${{ github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        run: echo "Passed"
+
+  build:
+    name: Django build
+    needs: authorize
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip" # caching pip dependencies
+
+      - name: Create ./backend/.envs/.development files
+        run: |
+          python -m pip install cryptography
+          python ./setup/env_file_generator.py production
+
+      - name: Start containers
+        run: make build-prod

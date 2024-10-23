@@ -1,0 +1,150 @@
+site_name: Nango Documentation
+repo_name: Grezy-Software/Nango
+repo_url: https://github.com/Grezy-Software/Nango
+copyright: MIT Licence
+
+docs_dir: "docs/"
+
+extra_css:
+  -  assets/stylesheets/extra.css
+  -  assets/stylesheets/api.css
+
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: 
+      name: X
+    - icon: fontawesome/brands/linkedin
+      link: 
+      name: Linkedin
+    - icon: fontawesome/brands/discord
+      link: 
+      name: Discord
+    - icon: fontawesome/brands/github
+      link: 
+      name: Github
+
+theme:
+  name: 'material'
+  custom_dir: themes
+  favicon: ''
+  logo: ''
+  language: 'en'
+  palette:
+    # Palette toggle for light mode
+    - media: "prefers-color-scheme: light"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        # icon: material/toggle-switch
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "prefers-color-scheme: dark"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        # icon: material/toggle-switch-off-outline
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+  custom_dir: 'docs/themes'
+  features:
+    - navigation.tabs
+    - navigation.tabs.stickyx
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - navigation.section
+    - content.code.annotate
+    # - toc.integrate
+    - toc.follow
+    - navigation.path
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+    - content.tabs.link
+    - content.code.annotate
+
+watch:
+  - docs
+
+plugins:
+  - search 
+  - autorefs
+  - inline-svg
+  # - coverage:
+  #     page_name: coverage  # default
+  #     html_report_dir: htmlcov  # default
+  - neoteroi.mkdocsoad:
+      use_pymdownx: true
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python: 
+          paths: [.] 
+          options: 
+            members_order: source
+            separate_signature: true
+            filters: ["!^_"]
+            docstring_options:
+              ignore_init_summary: true
+            merge_init_into_class: true
+            heading_level: 3
+            # extensions:
+            #   - docs/plugins/griffe_doclinks.py
+            show_source: false
+            allow_inspection: false 
+            show_bases: false 
+            show_root_heading: false 
+            docstring_style: google
+            # docstring_section_style: list
+            
+            # Signature
+            show_signature: true
+            separate_signature: true
+            show_signature_annotations: true
+            annotations_path: full
+            line_length: 80
+
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.snippets:
+  - pymdownx.magiclink:
+  - attr_list:
+  - md_in_html:
+  - pymdownx.inlinehilite:
+  - pymdownx.superfences:
+  - pymdownx.keys: 
+  - pymdownx.tasklist:
+      custom_checkbox: true 
+  - admonition
+  - codehilite:  
+      use_pygments: true
+      noclasses: true
+      pygments_style: tango
+  - pymdownx.details:
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+      # line_spans: __span
+
+
+
+nav:
+  - Home: 
+    - Overview: "index.md"
+    # - Quickstart: "sources/quickstart.md"
+  - Nango:
+    - Types: "src/types.md"
+  - Development: 
+    - Contributing: "contributing.md"
+    - Security: "SECURITY.md"

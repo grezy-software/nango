@@ -1,0 +1,92 @@
+[tool.ruff]
+
+lint.select = [
+    "F", "E", "W", "C90", "I", "N", "D", "UP", "YTT", "ANN", "ASYNC", "ASYNC1", "S", "BLE", "FBT", "B", "A", "C", "COM", "C4", "DTZ","T10","DJ",
+    "EM", "FA", "ISC", "ICN", "LOG", "G", "INP", "PIE", "T20", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "SIM", "TID", "TCH", "INT", "ARG", 
+    "PTH", "TD", "FIX", "ERA", "PD", "PGH", "PL", "TRY", "FLY", "NPY", "AIR", "PERF", "FURB", "RUF"
+    ]
+lint.ignore = [
+    # Ruff formatter recommendations
+    "W19",
+    "E111",
+    "E114",
+    "E117",
+    "D206",
+    "D300",
+    "Q000",
+    "Q001",
+    "Q002",
+    "Q003",
+    "COM812",
+    "COM819",
+    "ISC001",
+    "ISC002",
+
+    # Other
+    "PLR0913",          # Less than 5 arguments
+    "D107",             # Docstring in __init__
+    "D100",             # Module documentation
+    "D104",             # Docstring in public package
+    "PGH004",           # Noqa all
+    # Deprecated
+    "ANN101",
+    "ANN102",
+    ]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided
+lint.fixable = ["ALL"]
+lint.unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+lint.exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    ".venv",
+    "migrations",
+]
+
+# Same as Black.
+line-length = 150
+indent-width = 4
+
+# Allow unused variables when underscore-prefixed.
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+lint.pydocstyle.convention ="google"
+lint.mccabe.max-complexity = 15
+
+# Assume Python 3.11.
+target-version = "py311"
+
+[tool.ruff.lint.per-file-ignores]
+"*__init__.py" = [
+    "F403"      # Unused import
+]
+"*/migrations/*.py" = [
+    "D101",     # Missing docstring in public class
+    "RUF012",   # Mutable class attributes should be annotated with `typing.ClassVar`
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+line-ending = "lf"
