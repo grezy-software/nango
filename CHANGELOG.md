@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/grezy-software/nango/compare/v1.0.0...v1.0.1) (2024-10-30)
+
+
+### Bug Fixes
+
+* **bridge:** circular imports ([b867981](https://github.com/grezy-software/nango/commit/b867981c73925453ce5f4c933d40cf0f5aca5236))
+
 # 1.0.0 (2024-10-23)
 
 
