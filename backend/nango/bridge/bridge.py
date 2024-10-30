@@ -191,8 +191,15 @@ class FileManager:
 
         # Build customizable user's serializer
         nango_serializer_name: str = f"{model_name}{'Detail' if detail else ''}NangoSerializer"
+        regex = r"(?<=')(.*)(?=\.)"
+        match = re.search(regex, str(model))
+        import_path = match.group(1)
         data = {
-            "imports": [f"from api._nango_cache.{snake_case_model_name} import {nango_serializer_name}"],
+            "imports": [
+                f"from api._nango_cache.{snake_case_model_name}.{snake_case_model_name}{"_detail" if detail else ""}"
+                f"_nango_serializer import {nango_serializer_name}",
+                f"from {import_path} import {model_name}",
+            ],
             "model_name": model_name,
             "serializer_name": f"{model_name}{'Detail' if detail else ''}Serializer",
             "nango_serializer": nango_serializer_name,
@@ -200,10 +207,6 @@ class FileManager:
         self._make_serializer(folder_path=self.api_folder_path / snake_case_model_name, data=data, detail=detail)
 
         # Build generated Nango's serializer
-        regex = r"(?<=')(.*)(?=\.)"
-        match = re.search(regex, str(model))
-        import_path = match.group(1)
-
         data = {
             "imports": [
                 f"from {import_path} import {model_name}",
@@ -231,7 +234,8 @@ class FileManager:
                 ],
             }
             data["imports"] = [
-                f"from api.{dico.get('model_name')}.{from_camelcase_to_snakecase(dico.get('model_name'))}_serializer import {dico.get('serializer')}"
+                f"from api.{from_camelcase_to_snakecase(dico.get('model_name'))}.{from_camelcase_to_snakecase(dico.get('model_name'))}"
+                f"_serializer import {dico.get('serializer')}"
                 for dico in data["detail"]["specified_fields"]
             ] + data["imports"]
         else:
