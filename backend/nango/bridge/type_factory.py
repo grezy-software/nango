@@ -46,7 +46,7 @@ class AbstractTypeFactory:
             case "CharField" | "EmailField" | "ChoiceField":
                 return "string"
             case "DateField" | "DateTimeField":
-                return "Date"
+                return "string"
             case "IntegerField" | "FloatField":
                 return "number"
         return serializer.__class__.__name__.split("Serializer")[0]
@@ -149,7 +149,7 @@ class TsTypeFactory(AbstractTypeFactory):
             case "CharField" | "EmailField" | "ChoiceField":
                 return "string"
             case "DateField" | "DateTimeField":
-                return "Date"
+                return "string"
             case "IntegerField" | "FloatField":
                 return "number"
 
