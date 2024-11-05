@@ -45,3 +45,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]  # noqa: S104
 CORS_ALLOWED_ORIGINS = [f"http://{host}:3000" for host in ALLOWED_HOSTS]
 CSRF_TRUSTED_ORIGINS = [f"http://{host}:3000" for host in ALLOWED_HOSTS]
+
+# stop the reloader from going crazy
+RUNSERVERPLUS_POLLER_RELOADER_TYPE = "stat"
