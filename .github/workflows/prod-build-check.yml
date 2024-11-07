@@ -28,10 +28,12 @@ jobs:
           python-version: "3.12"
           cache: "pip" # caching pip dependencies
 
-      - name: Create ./backend/.envs/.development files
+      - name: Create ./backend/.envs/.production files
         run: |
           python -m pip install cryptography
           python ./setup/env_file_generator.py production
+          echo NEXT_PUBLIC_FRONTEND_URL=\"http://localhost:3000/\" >> frontend/.env
+          echo NEXT_PUBLIC_BACKEND_URL=\"http://localhost:8000/\" >> frontend/.env
 
       - name: Start containers
-        run: make build-prod
+        run: make up-prod
