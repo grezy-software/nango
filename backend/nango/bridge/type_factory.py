@@ -9,6 +9,9 @@ from rest_framework.fields import Field, ListField
 from rest_framework.relations import ManyRelatedField, PrimaryKeyRelatedField
 from rest_framework.serializers import ListSerializer, Serializer
 
+from nango.bridge.float_serializer_method_field import FloatSerializerMethodField
+from nango.bridge.string_serializer_method_field import StringSerializerMethodField
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -37,7 +40,7 @@ class AbstractTypeFactory:
 
     def get_type_name(self, serializer: Serializer | ListSerializer) -> str:
         """Return the type name, deduced from the serializer's name."""
-        if isinstance(serializer, ListSerializer):
+        if isinstance(serializer, ListSerializer | ListField):
             return self.get_type_name(serializer.child)
 
         match serializer.__class__.__name__:
@@ -161,7 +164,10 @@ class TsTypeFactory(AbstractTypeFactory):
             return "number[]"
         if isinstance(field, ListSerializer | ListField):
             return f"{self.get_type_name(field)}[]"
-
+        if isinstance(field, StringSerializerMethodField):
+            return "string"
+        if isinstance(field, FloatSerializerMethodField):
+            return "number"
         print(f"Impossible to get a TypeScript match for {field} ({type(field)})")  # noqa: T201
         return ""
 

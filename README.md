@@ -132,3 +132,9 @@ Now, you can pull directly from nango to get all our latest updates by running `
 If you have problems with pushing to the wrong remote, run: `git push -u origin <branch>` to set the upstream branch for the current checked out branch.
 
 Otherwise, you can manually edit the git config with `git config --edit`
+
+### Generate a token for AWS in order to prove private images
+
+`echo -n "$USERNAME:$GH_TOKEN" | base64`
+
+The GH_Token need the read:packages permission.
