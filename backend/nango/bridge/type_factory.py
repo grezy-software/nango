@@ -10,6 +10,7 @@ from rest_framework.relations import ManyRelatedField, PrimaryKeyRelatedField
 from rest_framework.serializers import ListSerializer, Serializer
 
 from nango.bridge.float_serializer_method_field import FloatSerializerMethodField
+from nango.bridge.int_serializer_method_field import IntSerializerMethodField
 from nango.bridge.string_serializer_method_field import StringSerializerMethodField
 
 if TYPE_CHECKING:
@@ -166,7 +167,7 @@ class TsTypeFactory(AbstractTypeFactory):
             return f"{self.get_type_name(field)}[]"
         if isinstance(field, StringSerializerMethodField):
             return "string"
-        if isinstance(field, FloatSerializerMethodField):
+        if isinstance(field, FloatSerializerMethodField | IntSerializerMethodField):
             return "number"
         print(f"Impossible to get a TypeScript match for {field} ({type(field)})")  # noqa: T201
         return ""
