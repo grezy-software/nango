@@ -80,9 +80,10 @@ STRIPE_ENDPOINT_SECRET = ""
 # Django
 # ------------------------------------------------------------------------------
 DJANGO_SECRET_KEY="{get_or_generate_key(name="DJANGO_SECRET_KEY",  multiplier=2)}" # noqa: S105
-DJANGO_DEBUG=True
-IS_LOCAL=True
+DJANGO_DEBUG={env_name!='Production'}
+IS_LOCAL={env_name!='Production'}
 DJANGO_SETTINGS_MODULE="config.settings.{env_name}"
+DB_SETUP='postgres' # (postgres or litestream)
 # Celery
 CELERY_FLOWER_USER="{get_or_generate_key(name="CELERY_FLOWER_USER")}"
 CELERY_FLOWER_PASSWORD="{get_or_generate_key(name="CELERY_FLOWER_PASSWORD", multiplier=2)}" # noqa: S105"""
