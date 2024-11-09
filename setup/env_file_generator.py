@@ -43,6 +43,7 @@ def build_postgres_env(env_name: str) -> None:
     folder: Path = make_folder(env_name)
     path: Path = folder.joinpath(".postgres")
     if path.exists():
+        print(f".{env_name}/.postgres already exists. Stop.")  # noqa: T201
         return
 
     content: str = f"""# PostgreSQL\n
@@ -64,6 +65,7 @@ def build_django_secrets(env_name: str) -> None:
     path: Path = folder.joinpath(".django")
 
     if path.exists():
+        print(f".{env_name}/.django already exists. Stop.")  # noqa: T201
         return
 
     content: str = f"""# General\n
@@ -79,9 +81,9 @@ STRIPE_SECRET_KEY = ""
 STRIPE_ENDPOINT_SECRET = ""
 # Django
 # ------------------------------------------------------------------------------
-DJANGO_SECRET_KEY="{get_or_generate_key(name="DJANGO_SECRET_KEY",  multiplier=2)}" # noqa: S105
-DJANGO_DEBUG={env_name!='Production'}
-IS_LOCAL={env_name!='Production'}
+DJANGO_SECRET_KEY="{'brBDrH4Gb-65!' if env_name == 'development' else get_or_generate_key(name="DJANGO_SECRET_KEY",  multiplier=2)}" # noqa: S105
+DJANGO_DEBUG={env_name!='production'}
+IS_LOCAL={env_name!='production'}
 DJANGO_SETTINGS_MODULE="config.settings.{env_name}"
 DB_SETUP='postgres' # (postgres or litestream)
 # Celery
