@@ -81,7 +81,7 @@ STRIPE_SECRET_KEY = ""
 STRIPE_ENDPOINT_SECRET = ""
 # Django
 # ------------------------------------------------------------------------------
-DJANGO_SECRET_KEY="{get_or_generate_key(name="DJANGO_SECRET_KEY",  multiplier=2)}" # noqa: S105
+DJANGO_SECRET_KEY="{'brBDrH4Gb-65!' if env_name == 'development' else get_or_generate_key(name="DJANGO_SECRET_KEY",  multiplier=2)}" # noqa: S105
 DJANGO_DEBUG={env_name!='production'}
 IS_LOCAL={env_name!='production'}
 DJANGO_SETTINGS_MODULE="config.settings.{env_name}"
