@@ -1,3 +1,23 @@
+# [1.1.0](https://github.com/grezy-software/nango/compare/v1.0.1...v1.1.0) (2024-11-09)
+
+
+### Bug Fixes
+
+* **.envs:** fix variables & logs for envs files generator ([014ccd6](https://github.com/grezy-software/nango/commit/014ccd638f5dfbc8a1cf6364f4e1b7c68add1cfb))
+* **ci:** removed imports in __init__.py ([3f08474](https://github.com/grezy-software/nango/commit/3f084748e686469a1a31efbb70998ea8c2050bca))
+* **ci:** up-prod ([f30d3b3](https://github.com/grezy-software/nango/commit/f30d3b3d3bfc343883c5c3acf6ca7d5544904b04))
+* **drf:** DEFAULT_SCHEMA_CLASS only in dev mode ([862c1d3](https://github.com/grezy-software/nango/commit/862c1d3b5dcbdc6cb41dc0ffba0009ef913865c6))
+* **readme:** remove todo list from readme ([ee413dd](https://github.com/grezy-software/nango/commit/ee413ddc7de044a5925df7e7bfb383edc57dd86b))
+* **requirement:** add gunicorn ([fab8ecf](https://github.com/grezy-software/nango/commit/fab8ecffe78121b30119459991edda3148223cc9))
+* **type_factory:** corrected Date type to string ([ba15bef](https://github.com/grezy-software/nango/commit/ba15bef1e89f4cf7509b01d2c97f33586bd87844))
+* **type_factory:** ListField & MethodField ([12d9f29](https://github.com/grezy-software/nango/commit/12d9f290c48fa421a22a68827ed2175521bb6e2d))
+* **werkzeug:** stop the reload from going crazy ([6f86ca0](https://github.com/grezy-software/nango/commit/6f86ca0ff19243ff74c303e74c13a1ed8d7eab26))
+
+
+### Features
+
+* **frontend:** useMounted ([18833cd](https://github.com/grezy-software/nango/commit/18833cd16cbaa3742629e4494bab17084b0a23b4))
+
 ## [1.0.1](https://github.com/grezy-software/nango/compare/v1.0.0...v1.0.1) (2024-10-30)
 
 
