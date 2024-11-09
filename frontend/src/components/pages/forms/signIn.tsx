@@ -52,10 +52,10 @@ export default function SignInForm() {
             loggedIn.setState(true)
             user.setState({ name: userInfo.username, email: userInfo.email })
             toast.success("Login successful!")
+            router.push(BASE_LOGGED_IN_URL + "/")
           } else {
             toast.error("An error has occurred, please try again...")
           }
-          router.push(BASE_LOGGED_IN_URL + "/")
         })}
         className="w-full space-y-4 py-8"
       >

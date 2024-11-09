@@ -30,8 +30,11 @@ jobs:
           echo "Tagging with $TAG_NAME"
           VERSION=v$TAG_NAME
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-          make build-prod
+          echo NEXT_PUBLIC_FRONTEND_URL=\"https://grezy.org/\" >> frontend/.env # TODO: Change
+          echo NEXT_PUBLIC_BACKEND_URL=\"https://grezy.org/\" >> frontend/.env # TODO: Change
+          python -m pip install cryptography
+          python ./setup/env_file_generator.py production
+          make up-prod
           docker tag nextjs ghcr.io/${{ github.repository }}/nextjs:$VERSION
           docker tag nextjs ghcr.io/${{ github.repository }}/nextjs:latest
           docker tag nango ghcr.io/${{ github.repository }}/nango:$VERSION
