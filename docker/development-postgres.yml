@@ -13,15 +13,15 @@ x-django-common: &django-common
     - ../backend/.envs/.development/.postgres
 
 volumes:
-  nango_postgres_dev_postgres_data:
-  nango_postgres_dev_postgres_data_backups:
+  nango_postgres_postgres_data:
+  nango_postgres_postgres_data_backups:
 
 services:
   nextjs:
     build:
       context: ..
       dockerfile: ./docker/compose/development/nextjs/Dockerfile
-    container_name: nango_dev_nextjs
+    container_name: nango_nextjs
     depends_on:
       postgres: 
         condition: service_started
@@ -31,17 +31,17 @@ services:
       - ../frontend/:/app/
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nango_dev_nextjs.rule=Host(`localhost`)"
-      - "traefik.http.routers.nango_dev_nextjs.entrypoints=frontend"
+      - "traefik.http.routers.nango_nextjs.rule=Host(`localhost`)"
+      - "traefik.http.routers.nango_nextjs.entrypoints=frontend"
     expose:
       - "3000"
 
   postgres:
     image: postgres:17
-    container_name: nango_dev_postgres
+    container_name: nango_postgres
     volumes:
-      - nango_postgres_dev_postgres_data:/var/lib/postgresql/data:Z
-      - nango_postgres_dev_postgres_data_backups:/backups:z
+      - nango_postgres_postgres_data:/var/lib/postgresql/data:Z
+      - nango_postgres_postgres_data_backups:/backups:z
     env_file:
       - ../backend/.envs/.development/.postgres
     ports:
@@ -50,7 +50,7 @@ services:
   django: 
     <<: *django-common
     image: nango
-    container_name: nango_dev_django
+    container_name: nango_django
     depends_on:
       postgres: 
         condition: service_started
@@ -66,11 +66,11 @@ services:
 
   redis:
     image: redis:6
-    container_name: nango_dev_redis
+    container_name: nango_redis
 
   celeryworker:
     <<: *django-common
-    container_name: nango_dev_celeryworker
+    container_name: nango_celeryworker
     user: celery
     depends_on:
       redis: 
@@ -85,7 +85,7 @@ services:
 
   celerybeat:
     <<: *django-common
-    container_name: nango_dev_celerybeat
+    container_name: nango_celerybeat
     depends_on:
       redis: 
         condition: service_started
@@ -99,7 +99,7 @@ services:
 
   flower:
     <<: *django-common
-    container_name: nango_dev_flower
+    container_name: nango_flower
     command: /start-flower.sh
     labels:
       - "traefik.enable=true"
@@ -122,7 +122,7 @@ services:
 
   traefik:
     image: "traefik:v2.9.5"
-    container_name: nango_dev_traefik
+    container_name: nango_traefik
     command:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
