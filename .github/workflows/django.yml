@@ -49,7 +49,7 @@ jobs:
 
       - name: Coverage value
         run: |
-          cvg_result=$(docker exec nango_dev_django coverage report --skip-covered | head -n -2 | tail -n 1 | awk '{print $NF}' | sed 's/%//')
+          cvg_result=$(docker exec nango_django coverage report --skip-covered | head -n -2 | tail -n 1 | awk '{print $NF}' | sed 's/%//')
           echo "COVERAGE=$cvg_result" >> $GITHUB_ENV
           echo $cvg_result
 
