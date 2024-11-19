@@ -1,3 +1,10 @@
+from nango.utils.abstract_cog import AbstractCog
+
+__all__ = [
+    "AbstractCog",
+]
+
+
 def setup_django() -> None:
     """Setup django environment."""
     import os
