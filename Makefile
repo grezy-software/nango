@@ -20,7 +20,7 @@ endif
 setup: setup-back setup-front
 
 test:
-	docker exec nango_dev_django coverage run manage.py test -v2 --keepdb
+	docker exec nango_django coverage run manage.py test -v2 --keepdb
 
 up: 
 	docker compose -f docker/development-postgres.yml up -d --no-color --build --remove-orphans 
@@ -38,29 +38,29 @@ downv:
 	docker compose -f docker/development-postgres.yml down -v
 
 nango:
-	docker exec nango_dev_django python manage.py bridge -t
+	docker exec nango_django python manage.py bridge -t
 	cp -r ./backend/.nango_front/ts_types ./frontend/src/api/nango_front/
 	ruff format
 
 route:
-	docker exec nango_dev_django python manage.py bridge -r
+	docker exec nango_django python manage.py bridge -r
 
 script:
-	docker exec nango_dev_django python manage.py runscript $(SCRIPT)
+	docker exec nango_django python manage.py runscript $(SCRIPT)
 	
 django:	# Go insine the Django container
-	docker exec -it nango_dev_django bash
+	docker exec -it nango_django bash
 
 makemigrations:
-	docker exec -it nango_dev_django python manage.py makemigrations
+	docker exec -it nango_django python manage.py makemigrations
 	ruff format
 
 migrate:
-	docker exec -it nango_dev_django python manage.py migrate
+	docker exec -it nango_django python manage.py migrate
 
 coverage: test
-	docker exec nango_dev_django coverage html
-	docker exec nango_dev_django coverage report
+	docker exec nango_django coverage html
+	docker exec nango_django coverage report
 
 stripe:
 	# stripe login
