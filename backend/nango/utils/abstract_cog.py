@@ -8,7 +8,12 @@ if TYPE_CHECKING:
 
 
 class AbstractCog(ABC):
-    """Cog's base class, that gives the same basic functionalities for all cogs."""
+    """Cog's base class, that gives the same basic functionalities for all cogs.
+
+    If settings are not defined or is `{}`, the default settings will be used.
+    Otherwise, if the settings are `None`, the Cog will not run.
+    If one of the settings is not specified, the default value will be used.
+    """
 
     id = None
 
@@ -25,6 +30,8 @@ class AbstractCog(ABC):
     @abstractmethod
     def run(self) -> None:
         """Execute the cog logic."""
+        if not self.is_executable():
+            return
 
     def is_executable(self) -> bool:
         """Indicate if the cog can run or not."""
