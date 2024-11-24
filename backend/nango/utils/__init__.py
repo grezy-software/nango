@@ -1,7 +1,9 @@
 from nango.utils.abstract_cog import AbstractCog
+from nango.utils.cogs_runner import CogsRunner
 
 __all__ = [
     "AbstractCog",
+    "CogsRunner",
 ]
 
 

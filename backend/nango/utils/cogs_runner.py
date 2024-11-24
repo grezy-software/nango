@@ -63,7 +63,3 @@ class CogsRunner:
                 # Run the cogs
                 instantiated_cog = cog(model=model, settings=settings)
                 instantiated_cog.run()
-
-
-if __name__ == "django.core.management.commands.shell":
-    CogsRunner().run_cogs()
