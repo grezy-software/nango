@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
@@ -36,3 +37,11 @@ class AbstractCog(ABC):
     def is_executable(self) -> bool:
         """Indicate if the cog can run or not."""
         return self.settings is not None
+
+    def _generate_model_import(self) -> str:
+        """Return the model import line for file generation."""
+        regex = r"(?<=')(.*)(?=\.)"
+        match = re.search(regex, str(self.model))
+        import_path = match.group(1)
+
+        return f"from {import_path} import {self.model.__name__}"

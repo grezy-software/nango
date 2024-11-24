@@ -32,12 +32,15 @@ class CogsRunner:
     def get_settings_from_model(self, model: models.Model) -> dict[str, any]:
         """Return settings define in a model."""
         model_nango_method: Callable | None = getattr(model, "nango", None)
+
         if not isinstance(model_nango_method, Callable):
             if model_nango_method is None:
                 # No settings defined in the model
                 return {}
+
             error_msg: str = f"{model}.nango must be a staticmethod, not a property."
             raise TypeError(error_msg)
+
         return model_nango_method()
 
     def _is_filtered_model(self, model: models.Model) -> bool:
@@ -54,6 +57,7 @@ class CogsRunner:
         for model in apps.get_models():
             if self._is_filtered_model(model):
                 continue
+
             for cog in cogs_classes:
                 settings = self.get_settings_from_model(model)
                 if settings is None:
