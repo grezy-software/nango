@@ -25,7 +25,7 @@ class CogsRunner:
 
     model_filter_keywords: list[str] = ("django", "django_celery_beat", "rest_framework")
 
-    def get_cogs_classes(self) -> list[callable]:
+    def get_cogs_classes(self) -> list[Callable]:
         """Return cogs's classes to execute."""
         return [getattr(import_module("nango.cogs"), cog_str) for cog_str in cogs.__all__]
 
