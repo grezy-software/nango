@@ -38,7 +38,7 @@ class AbstractCog(ABC):
         """Indicate if the cog can run or not."""
         return self.settings is not None
 
-    def _generate_model_import(self) -> str:
+    def _get_model_import(self) -> str:
         """Return the model import line for file generation."""
         regex = r"(?<=')(.*)(?=\.)"
         match = re.search(regex, str(self.model))
