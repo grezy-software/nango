@@ -8,7 +8,7 @@ __all__ = [
 
 
 def setup_django() -> None:
-    """Setup django environment."""
+    """Setup Django's environment."""
     import os
     import sys
     from pathlib import Path
