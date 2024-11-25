@@ -59,10 +59,10 @@ class CogsRunner:
             for cog in cogs_classes:
                 model_nango_settings = self.get_settings_from_model(model)
 
-                # This model doesn't want any cogs.
+                # This model doesn't want to run any cogs.
                 if model_nango_settings is None:
                     continue
 
-                # Run the cogs
+                # Instantiate the cogs with settings and run it
                 instantiated_cog = cog(model=model, settings=model_nango_settings)
                 instantiated_cog.run()
