@@ -287,12 +287,12 @@ class FileManager:
 
     def setup_api_for_model(self, models_data: dict[ModelBase, dict[fields, str]]) -> None:
         """Setup API files for a given model."""
-        for model in models_data:
+        for model in models_data:  # noqa: PLC0206
             model_name = model.__name__
 
             # Check settings for folder construction
             settings = self.get_model_settings(model)
-            if settings is None or settings["serializers"] is None and settings["view"] is None:
+            if settings is None or (settings["serializers"] is None and settings["view"] is None):
                 continue
 
             self.make_api_architecture(model_name=model_name)

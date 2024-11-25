@@ -95,6 +95,7 @@ backend/.envs
 # backend/nango/models.py
 backend/api/Author
 backend/api/Book
+backend/nango/models/test.py
 
 # -------------------------------------------------------------------------------------------------
 # Frontend

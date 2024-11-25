@@ -42,6 +42,9 @@ nango:
 	cp -r ./backend/.nango_front/ts_types ./frontend/src/api/nango_front/
 	ruff format
 
+rework:
+	docker exec nango_django python manage.py nango
+
 route:
 	docker exec nango_django python manage.py bridge -r
 
