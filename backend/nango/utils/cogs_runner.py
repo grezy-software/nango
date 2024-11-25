@@ -53,7 +53,7 @@ class CogsRunner:
 
     def run_cogs(self) -> None:
         """Run all existing cogs."""
-        cogs_classes = self.get_cogs_classes()
+        cogs_classes = self.get_cog_classes()
 
         for model in self.get_local_model_classes():
             for cog in cogs_classes:
